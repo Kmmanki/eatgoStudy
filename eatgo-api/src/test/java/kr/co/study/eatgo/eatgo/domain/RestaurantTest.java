@@ -1,4 +1,4 @@
-package domain;
+package kr.co.study.eatgo.eatgo.domain;
 
 import org.junit.jupiter.api.Test;
 
