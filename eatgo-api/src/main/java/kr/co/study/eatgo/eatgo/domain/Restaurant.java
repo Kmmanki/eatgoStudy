@@ -2,12 +2,16 @@ package kr.co.study.eatgo.eatgo.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class Restaurant {
+@Setter
+@AllArgsConstructor
+public  class Restaurant {
 
     private  Long id;
     private  String name;

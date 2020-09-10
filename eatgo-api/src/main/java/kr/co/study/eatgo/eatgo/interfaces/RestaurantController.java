@@ -1,11 +1,10 @@
 package kr.co.study.eatgo.eatgo.interfaces;
 
 import kr.co.study.eatgo.eatgo.application.RestaurantService;
-import kr.co.study.eatgo.eatgo.domain.*;
-import kr.co.study.eatgo.eatgo.domain.MenuItem;
+import kr.co.study.eatgo.eatgo.domain.Restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,7 +21,7 @@ public class RestaurantController {
     public List<Restaurant> list(){
         List<Restaurant> restaurants= restaurantService.getRestaurants();
 
-        return restaurants;
+         return restaurants;
     }
 
     @GetMapping("/restaurants/{id}")
@@ -34,17 +33,16 @@ public class RestaurantController {
         return restaurant;
     }
 
-    @PostMapping("restaurants")
-    public ResponseEntity<?> create(@RequestBody Restaurant resource) throws URISyntaxException {
+    @PostMapping("/restaurants")
+    public ResponseEntity<?> create( @RequestBody  Restaurant resource) throws URISyntaxException {
 
         String name = resource.getName();
         String information = resource.getInformation();
-        long id = resource.getId();
-        Restaurant restaurant = new Restaurant(id, name, information );
-        restaurantService.addRestaurant(restaurant);
+        Restaurant restaurant = new Restaurant(name, information );
+        restaurant = restaurantService.addRestaurant(restaurant);
 
         URI location = new URI("/restaurants/"+restaurant.getId());
-        return ResponseEntity. created(location).body("{}");
+        return ResponseEntity.created(location).body("{}");
     }
 
 }
