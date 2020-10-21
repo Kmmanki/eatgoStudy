@@ -3,6 +3,7 @@ package kr.co.study.eatgo.eatgo.interfaces;
 import kr.co.study.eatgo.eatgo.application.RestaurantService;
 import kr.co.study.eatgo.eatgo.domain.MenuItem;
 import kr.co.study.eatgo.eatgo.domain.Restaurant;
+import kr.co.study.eatgo.eatgo.domain.RestaurantNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -51,12 +53,18 @@ class RestaurantControllerTest {
     }
 
     @Test
-    public  void detail() throws Exception{
-       Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Seoul");
-       Restaurant restaurant2 = new Restaurant(2020L, "Cyber food", "Seoul");
-       restaurant.addMenuItem(new MenuItem("kimchi"));
-        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
-        given(restaurantService.getRestaurant(2020L)).willReturn(restaurant2);
+    public  void detailWithExist() throws Exception{
+       Restaurant restaurant = Restaurant.builder()
+               .information("seoul")
+               .name("Bob zip")
+               .id(1004L)
+               .build();
+       Restaurant restaurant2 =
+               Restaurant.builder()
+                       .information("seoul")
+                       .name("Cyber food")
+                       .id(2020L)
+                       .build();
 
         mvc.perform(get("/restaurants/1004"))
                 .andExpect(status().isOk())
@@ -72,14 +80,47 @@ class RestaurantControllerTest {
                 .andExpect(content().string(containsString("\"name\":\"Cyber food\"")));
 
     }
+
     @Test
-    public void create() throws  Exception{
+    public  void detailNotWithExist() throws Exception{
+        given(restaurantService.getRestaurant(404L))
+                .willThrow(new RestaurantNotFoundException(404L));
+        mvc.perform(get("/restaurants/404"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().string("{}"));
+    }
+
+    @Test
+    public void createWithValData() throws  Exception{
+        given(restaurantService.addRestaurant(any())).will(invocation ->{
+            Restaurant restaurant = invocation.getArgument(0);
+            return Restaurant.builder()
+                    .id(1234L)
+                    .name("BeRou")
+                    .information("Busan")
+                    .build();
+        });
+
         mvc.perform(post("/restaurants")
         .contentType(MediaType.APPLICATION_JSON)
         .content("{\"name\":\"BeRou\", \"information\":\"Busan\"}"))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("location","/restaurants/12345"))
+                .andExpect(header().string("location","/restaurants/1234"))
                 .andExpect(content().string("{}"));
+
+//        verify(restaurantService).addRestaurant(any());
+
+
+    }
+
+    @Test
+    public void createWithInvalidData() throws  Exception{
+
+
+        mvc.perform(post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\", \"information\":\"\"}"))
+                .andExpect(status().isBadRequest());
 
 //        verify(restaurantService).addRestaurant(any());
 

@@ -1,29 +1,32 @@
 package kr.co.study.eatgo.eatgo.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
 @AllArgsConstructor
 public  class Restaurant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
-    private  String name;
-    private  String information;
-    @Transient
-    private List<MenuItem> menuItems = new ArrayList<>();
 
-    public Restaurant() {
-    }
+    @NotEmpty
+    private  String name;
+    @NotEmpty
+    private  String information;
+
+    @Transient
+    private List<MenuItem> menuItems ;
 
     public Restaurant(String name, String information) {
         this.name = name;
@@ -45,9 +48,9 @@ public  class Restaurant {
     public void addMenuItem(MenuItem menuItem) {
         menuItems.add(menuItem);
     }
-
     public void setMenuItems(List<MenuItem> menuItems) {
-        this.menuItems = menuItems;
+        this.menuItems = new ArrayList<>();
+
     }
 
     public void setId(long l) {

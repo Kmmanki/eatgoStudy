@@ -47,12 +47,23 @@ class RestaurantServiceTest {
     }
 
     @Test
-    public void getRestaurant(){
+    public void getWithExistedRestaurant(){
        Restaurant restaurant = restaurantService.getRestaurant(1004L);
 
         assertThat(restaurant.getId(), is(1004L));
         MenuItem menuItem = restaurant.getMenuItems().get(0);
         assertThat(menuItem.getName(), is("kimchi"));
+    }
+
+    @Test
+    public void getNotExistedRestaurant(){
+        try {
+            Restaurant restaurant = restaurantService.getRestaurant(404L);
+
+        }catch (RestaurantNotFoundException e){
+            assertThat(e.getMessage(), is("Could Not Find restaurant404"));
+        }
+
     }
 
     @Test
@@ -62,13 +73,29 @@ class RestaurantServiceTest {
 
         assertThat(restaurants.get(0).getId(), is(1004L));
     }
+
     @Test
     public void addRestaurant(){
-        Restaurant restaurant = new Restaurant("BeRyong", "Busan" );
-        Restaurant saved = new Restaurant(1234L,"BeRyong", "Busan" );
+        given(restaurantRepository.save(any())).will(invocation ->{
+            Restaurant restaurant = invocation.getArgument(0);
+            restaurant.setId(1234L);
+            return restaurant;
+        });
+
+
+
+        Restaurant restaurant = Restaurant.builder()
+                .name("BeRyong")
+                .information("Busan")
+                .build();
+
+        Restaurant saved = Restaurant.builder()
+                .id(1234L)
+                .name("BeRyong")
+                .information("Busan")
+                .build();
 
        Restaurant created =  restaurantService.addRestaurant(restaurant);
-        given(restaurantRepository.save(any())).willReturn(restaurant);
 
        assertThat(saved.getId() , is(1234L));
     }

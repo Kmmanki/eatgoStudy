@@ -1,4 +1,4 @@
-package kr.co.study.eatgo.eatgo.domain;
+ package kr.co.study.eatgo.eatgo.domain;
 
 import org.springframework.data.repository.CrudRepository;
 
