@@ -1,7 +1,6 @@
 package kr.co.study.eatgo.eatgo.interfaces;
 
 import kr.co.study.eatgo.eatgo.application.RestaurantService;
-import kr.co.study.eatgo.eatgo.domain.MenuItem;
 import kr.co.study.eatgo.eatgo.domain.Restaurant;
 import kr.co.study.eatgo.eatgo.domain.RestaurantNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -12,13 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

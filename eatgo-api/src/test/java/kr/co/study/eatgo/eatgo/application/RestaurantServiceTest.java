@@ -4,7 +4,6 @@ import kr.co.study.eatgo.eatgo.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -25,7 +24,7 @@ class RestaurantServiceTest {
     RestaurantRepository restaurantRepository;
     @MockBean
     MenuItemRepository menuItemRepository;
-    @BeforeEach
+    @BeforeEach()
     public void setUp(){
         MockitoAnnotations.initMocks(this); // 일일이 생성자를 만들어주지 않아도 된다.
 

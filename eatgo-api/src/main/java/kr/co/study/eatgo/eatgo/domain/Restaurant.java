@@ -1,6 +1,6 @@
 package kr.co.study.eatgo.eatgo.domain;
 
-import com.sun.istack.NotNull;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,7 +25,8 @@ public  class Restaurant {
     @NotEmpty
     private  String information;
 
-    @Transient
+    @Transient //직렬화 하지 않는다. JPA에서 테이블로 만들어지지 않는다.
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<MenuItem> menuItems ;
 
     public Restaurant(String name, String information) {
