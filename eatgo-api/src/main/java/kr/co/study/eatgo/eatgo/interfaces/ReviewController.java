@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -19,12 +20,12 @@ public class ReviewController {
 
     @PostMapping("/restaurants/{restaurantId}/reviews")
     public ResponseEntity<?> createReview (
-            @RequestBody Review review,
+            @RequestBody @Valid Review resource,
             @PathVariable("restaurantId") Long restaurantId) throws  Exception{
 
-        reviewService.addReview(review);
+        Review review = reviewService.addReview(resource, restaurantId);
 
-        return ResponseEntity.created(new URI("/restaurants/1/reviews/1"))
+        return ResponseEntity.created(new URI("/restaurants/"+restaurantId+"/reviews/"+review.getId()))
                 .body("{}");
     }
 

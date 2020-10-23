@@ -1,8 +1,10 @@
 package kr.co.study.eatgo.eatgo.interfaces;
 
 import kr.co.study.eatgo.eatgo.application.RestaurantService;
+import kr.co.study.eatgo.eatgo.domain.MenuItem;
 import kr.co.study.eatgo.eatgo.domain.Restaurant;
 import kr.co.study.eatgo.eatgo.domain.RestaurantNotFoundException;
+import kr.co.study.eatgo.eatgo.domain.Review;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
@@ -56,25 +59,30 @@ class RestaurantControllerTest {
                .name("Bob zip")
                .id(1004L)
                .build();
-       Restaurant restaurant2 =
-               Restaurant.builder()
-                       .information("seoul")
-                       .name("Cyber food")
-                       .id(2020L)
-                       .build();
+       MenuItem menuItem = MenuItem.builder()
+               .name("Kimchi")
+               .build();
+
+        Review review = Review.builder()
+                .name("Joker")
+                .score(5L)
+                .description("good")
+                .build();
+        restaurant.setMenuItems(Arrays.asList(menuItem));
+        restaurant.setReviews(Arrays.asList(review));
+
+       given(restaurantService.getRestaurant(1004L)).willReturn(restaurant);
 
         mvc.perform(get("/restaurants/1004"))
                 .andExpect(status().isOk())
         .andExpect(content()
                 .string(containsString("\"id\":1004")))
         .andExpect(content().string(containsString("\"name\":\"Bob zip\"")))
-        .andExpect(content().string(containsString("kimchi")));
+        .andExpect(content().string(containsString("Kimchi")))
+        .andExpect(content().string(containsString("good")));
 
-        mvc.perform(get("/restaurants/2020"))
-                .andExpect(status().isOk())
-                .andExpect(content()
-                        .string(containsString("\"id\":2020")))
-                .andExpect(content().string(containsString("\"name\":\"Cyber food\"")));
+
+
 
     }
 

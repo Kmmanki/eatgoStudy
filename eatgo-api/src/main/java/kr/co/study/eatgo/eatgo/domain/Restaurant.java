@@ -29,6 +29,10 @@ public  class Restaurant {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<MenuItem> menuItems ;
 
+    @Transient
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<Review> reviews;
+
     public Restaurant(String name, String information) {
         this.name = name;
         this.information = information;
@@ -47,14 +51,19 @@ public  class Restaurant {
 
 
     public void addMenuItem(MenuItem menuItem) {
+
         menuItems.add(menuItem);
     }
     public void setMenuItems(List<MenuItem> menuItems) {
-        this.menuItems = new ArrayList<>();
+        this.menuItems = menuItems;
 
     }
 
     public void setId(long l) {
         this.id = l;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }
